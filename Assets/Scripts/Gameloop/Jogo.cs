@@ -16,22 +16,20 @@ public class Jogo : MonoBehaviour
     private List<Jogador> jogadores;
     private Dados dados;
 
-    private int turno;
-    private int rodada;
+    [SerializeField] private int turno;
+    [SerializeField] private int rodada;
 
     void Start()
     {
         iniciarJogo();
     }
-    void FixedUpdate()
+    void Update()
     {
         if (turno % (jogadores.Count - 1) == 0)
         {
             this.turno = 0;
             avancarRodada();
         }
-        if (jogadores[this.turno].getPosicao() - jogadores[this.turno].getPosicaoAntiga() < 0) 
-            jogadores[this.turno].credita(200);
         if (this.turno == 0)
         {
             botao1.SetActive(true);
@@ -45,6 +43,12 @@ public class Jogo : MonoBehaviour
             botao2.SetActive(false);
             botao3.SetActive(false);
         }
+    }
+    void FixedUpdate()
+    {
+        if (jogadores[this.turno].getPosicao() - jogadores[this.turno].getPosicaoAntiga() < 0) 
+            jogadores[this.turno].credita(200);
+        
         StartCoroutine(movePecas());
     }
 

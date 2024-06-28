@@ -9,6 +9,10 @@ public class ChangeableLanguage : MonoBehaviour
     private TMP_Text publicText;
     private LanguageController languageManager;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     void Start()
     {
         languageManager = FindObjectOfType<LanguageController>();

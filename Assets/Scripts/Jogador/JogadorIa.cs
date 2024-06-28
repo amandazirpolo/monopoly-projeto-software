@@ -6,6 +6,16 @@ public class JogadorIa : Jogador
 {
     private EstrategiaCompra estrategiaCompra;
 
+    public JogadorIa()
+    {
+        this.posicaoAntiga = 0;
+        this.posicao = 0;
+        this.preso = false;
+        this.turnosPreso = 0;
+        int random = Random.Range(0, 2);
+        if (random == 0) estrategiaCompra = new EstrategiaAgressiva();
+        else estrategiaCompra = new EstrategiaConservadora();
+    }
     public override void comprarCasa(Propriedades propriedade)
     {
         // 3 cores: vermelho = 1, amarelo = 2, laranja = 3, azulClaro = 4, rosa = 5, verde = 6;

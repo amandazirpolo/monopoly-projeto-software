@@ -10,7 +10,7 @@ public class Tabuleiro : MonoBehaviour
     private Baralho baralhoSorte;
     private Baralho baralhoCofre;
 
-    void Start()
+    public Tabuleiro()
     {
         iniciarTabuleiro();
     }
@@ -76,6 +76,10 @@ public class Tabuleiro : MonoBehaviour
     public void liberarJogador(Jogador jogador) 
     {
         jogador.setPreso(false);
+    }
+    public List<Casa> getCasas()
+    {
+        return casas;
     }
     public List<GameObject> getCasasTabuleiro()
     {

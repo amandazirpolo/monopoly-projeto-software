@@ -7,6 +7,10 @@ public class Jogo : MonoBehaviour
     [SerializeField] private List<GameObject> pecas;
     [SerializeField][Range(0.1f, 1.0f)] private float moveSpeed; // Velocidade de movimento da peça
 
+    [SerializeField] private GameObject botao1;
+    [SerializeField] private GameObject botao2;
+    [SerializeField] private GameObject botao3;
+
     private Jogo instancia;
     private Tabuleiro tabuleiro;
     private List<Jogador> jogadores;
@@ -15,12 +19,32 @@ public class Jogo : MonoBehaviour
     private int turno;
     private int rodada;
 
+    void Start()
+    {
+        iniciarJogo();
+    }
     void FixedUpdate()
     {
-        if (turno % (jogadores.Count - 1) == 0) 
+        if (turno % (jogadores.Count - 1) == 0)
+        {
+            this.turno = 0;
             avancarRodada();
-        if (jogadores[turno].getPosicao() - jogadores[turno].getPosicaoAntiga() < 0) 
-            jogadores[turno].credita(200);
+        }
+        if (jogadores[this.turno].getPosicao() - jogadores[this.turno].getPosicaoAntiga() < 0) 
+            jogadores[this.turno].credita(200);
+        if (this.turno == 0)
+        {
+            botao1.SetActive(true);
+            botao2.SetActive(true);
+            botao3.SetActive(true);
+        }
+        else
+        {
+            IA_PassaTurno();
+            botao1.SetActive(false);
+            botao2.SetActive(false);
+            botao3.SetActive(false);
+        }
         StartCoroutine(movePecas());
     }
 
@@ -29,6 +53,13 @@ public class Jogo : MonoBehaviour
         this.tabuleiro = new Tabuleiro();
         this.dados = new Dados();
         this.jogadores = new List<Jogador>(6);
+        for (int i = 0; i < jogadores.Count; i++)
+        {
+            if (i == 0)
+                jogadores[i] = new JogadorHumano();
+            else
+                jogadores[i] = new JogadorIa();
+        }
         this.turno = 0;
         this.rodada = 0;
     }
@@ -38,11 +69,11 @@ public class Jogo : MonoBehaviour
     }
     public void avancarTurno()
     {
-        this.turno++;
+        this.turno+=1;
     }
     private void avancarRodada()
     {
-        this.rodada++;
+        this.rodada+=1;
     }
     public void rolarDados()
     {
@@ -61,24 +92,21 @@ public class Jogo : MonoBehaviour
     }
     IEnumerator movePecas()
     {
-        for (int i = 0; i < this.jogadores.Count; i++)
+        int currentPos = this.jogadores[turno].getPosicao();
+        int piecePos = this.jogadores[turno].getPosicaoAntiga();
+
+        // Verifica se a peça está em uma dezena atrás do jogador
+        if ((piecePos / 10) < (currentPos / 10))
         {
-            int currentPos = this.jogadores[i].getPosicao();
-            int piecePos = this.jogadores[i].getPosicaoAntiga();
-
-            // Verifica se a peça está em uma dezena atrás do jogador
-            if ((piecePos / 10) < (currentPos / 10))
-            {
-                // Move a peça para a próxima dezena inteira
-                int nextDecadePos = ((piecePos / 10) + 1) * 10;
-                Vector3 targetPositionDecade = getTargetPosition(i, nextDecadePos);
-                yield return MoveToPosition(i, targetPositionDecade);
-            }
-
-            // Move a peça para a posição final do jogador
-            Vector3 targetPosition = getTargetPosition(i, currentPos);
-            yield return MoveToPosition(i, targetPosition);
+            // Move a peça para a próxima dezena inteira
+            int nextDecadePos = ((piecePos / 10) + 1) * 10;
+            Vector3 targetPositionDecade = getTargetPosition(turno, nextDecadePos);
+            yield return MoveToPosition(turno, targetPositionDecade);
         }
+
+        // Move a peça para a posição final do jogador
+        Vector3 targetPosition = getTargetPosition(turno, currentPos);
+        yield return MoveToPosition(turno, targetPosition);
     }
 
     private Vector3 getTargetPosition(int i, int pos)
@@ -99,6 +127,22 @@ public class Jogo : MonoBehaviour
             yield return null;
         }
         pecas[i].transform.position = targetPosition;
+    }
+
+    public void comprarPropriedade()
+    {
+        Propriedades prop;
+        if (tabuleiro.getCasas()[jogadores[turno].getPosicao()] is Propriedades)
+        {
+            prop = (Propriedades)tabuleiro.getCasas()[jogadores[turno].getPosicao()];
+            jogadores[turno].comprarPropriedade(prop);
+        }
+    }
+    public void IA_PassaTurno()
+    {
+        rolarDados();
+        comprarPropriedade();
+        avancarTurno();
     }
 
     public void addJogador(Jogador jogador)

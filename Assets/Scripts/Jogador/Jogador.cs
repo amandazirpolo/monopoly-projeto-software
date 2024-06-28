@@ -4,8 +4,8 @@ using UnityEngine;
 
 public abstract class Jogador : MonoBehaviour
 {
-    protected string nome;
-    protected int saldo;
+    [SerializeField] protected string nome;
+    [SerializeField] protected int saldo;
     protected int posicao;
     protected int posicaoAntiga;
     protected List<Propriedades> propriedades;

@@ -28,17 +28,13 @@ public class Jogo : MonoBehaviour
     {
         this.tabuleiro = new Tabuleiro();
         this.dados = new Dados();
+        this.jogadores = new List<Jogador>(6);
         this.turno = 0;
         this.rodada = 0;
-        for (int i = 0; i < jogadores.Count; i++)
-        {
-            this.pecas[i].gameObject.SetActive(true);
-        }
     }
-    public void iniciarJogo(int qntdJogadores)
+    public void iniciarJogo()
     {
         this.instancia = getInstancia();
-        this.jogadores = new List<Jogador>(qntdJogadores);
     }
     public void avancarTurno()
     {

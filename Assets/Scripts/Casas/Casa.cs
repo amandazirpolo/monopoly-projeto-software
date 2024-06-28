@@ -2,8 +2,8 @@ using UnityEngine;
 
 public abstract class Casa : MonoBehaviour
 {
-    [SerializeField] private string nome;
-    [SerializeField] private string descricao;
+    [SerializeField] protected string nome;
+    [SerializeField] protected string descricao;
 
     public abstract void executaEfeitoCasa(Jogador jogador);
 }

@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class CartaSairPrisao : CartaSorte
 {
-    public override void aplicarEfeito()
+    public CartaSairPrisao()
     {
-
+        this.descricao = "O jogador pode fugir na proxima vez que for preso";
+    }
+    public override void aplicarEfeito(Jogador jogador)
+    {
+        jogador.setPreso(false);
     }
 }

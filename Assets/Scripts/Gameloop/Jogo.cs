@@ -17,23 +17,28 @@ public class Jogo : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (turno % jogadores.Count == 0) 
+        if (turno % (jogadores.Count - 1) == 0) 
             avancarRodada();
+        if (jogadores[turno].getPosicao() - jogadores[turno].getPosicaoAntiga() < 0) 
+            jogadores[turno].credita(200);
         StartCoroutine(movePecas());
     }
 
-    public void iniciarJogo(int qntdJogadores)
+    private Jogo()
     {
-        this.instancia = this;
         this.tabuleiro = new Tabuleiro();
-        this.jogadores = new List<Jogador>(qntdJogadores);
         this.dados = new Dados();
         this.turno = 0;
         this.rodada = 0;
-        for (int i=0; i < jogadores.Count; i++)
+        for (int i = 0; i < jogadores.Count; i++)
         {
             this.pecas[i].gameObject.SetActive(true);
         }
+    }
+    public void iniciarJogo(int qntdJogadores)
+    {
+        this.instancia = getInstancia();
+        this.jogadores = new List<Jogador>(qntdJogadores);
     }
     public void avancarTurno()
     {
@@ -43,15 +48,7 @@ public class Jogo : MonoBehaviour
     {
         this.rodada++;
     }
-    public void jogarRodadaHumano()
-    { 
-        rolarDados();
-    }
-    public void jogarRodadaIa()
-    {
-        rolarDados();
-    }
-    private void rolarDados()
+    public void rolarDados()
     {
         bool dadosIguais;
         do {
@@ -70,21 +67,44 @@ public class Jogo : MonoBehaviour
     {
         for (int i = 0; i < this.jogadores.Count; i++)
         {
-            Vector3 targetPosition;
-            if ((this.jogadores[i].getPosicao() >= 0 && this.jogadores[i].getPosicao() <= 10) || (this.jogadores[i].getPosicao() >= 20 && this.jogadores[i].getPosicao() <= 30))
-                targetPosition = new Vector3(pecas[i].transform.position.x,tabuleiro.getCasasTabuleiro()[this.jogadores[i].getPosicao()].transform.position.y, pecas[i].transform.position.z);
-            else
-                targetPosition = new Vector3(tabuleiro.getCasasTabuleiro()[this.jogadores[i].getPosicao()].transform.position.x, pecas[i].transform.position.y, pecas[i].transform.position.z);
+            int currentPos = this.jogadores[i].getPosicao();
+            int piecePos = this.jogadores[i].getPosicaoAntiga();
 
-            while (Vector3.Distance(pecas[i].transform.position, targetPosition) > 0.01f)
+            // Verifica se a peça está em uma dezena atrás do jogador
+            if ((piecePos / 10) < (currentPos / 10))
             {
-                pecas[i].transform.position = Vector3.MoveTowards(pecas[i].transform.position, targetPosition, moveSpeed * Time.deltaTime);
-                yield return null;
+                // Move a peça para a próxima dezena inteira
+                int nextDecadePos = ((piecePos / 10) + 1) * 10;
+                Vector3 targetPositionDecade = getTargetPosition(i, nextDecadePos);
+                yield return MoveToPosition(i, targetPositionDecade);
             }
 
-            pecas[i].transform.position = targetPosition;
+            // Move a peça para a posição final do jogador
+            Vector3 targetPosition = getTargetPosition(i, currentPos);
+            yield return MoveToPosition(i, targetPosition);
         }
     }
+
+    private Vector3 getTargetPosition(int i, int pos)
+    {
+        Vector3 targetPosition;
+        if ((pos >= 10 && pos <= 20) || (pos >= 30 && pos <= 39))
+            targetPosition = new Vector3(pecas[i].transform.position.x, tabuleiro.getCasasTabuleiro()[pos].transform.position.y, pecas[i].transform.position.z);
+        else
+            targetPosition = new Vector3(tabuleiro.getCasasTabuleiro()[pos].transform.position.x, pecas[i].transform.position.y, pecas[i].transform.position.z);
+        return targetPosition;
+    }
+
+    private IEnumerator MoveToPosition(int i, Vector3 targetPosition)
+    {
+        while (Vector3.Distance(pecas[i].transform.position, targetPosition) > 0.01f)
+        {
+            pecas[i].transform.position = Vector3.MoveTowards(pecas[i].transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+        pecas[i].transform.position = targetPosition;
+    }
+
     public void addJogador(Jogador jogador)
     {
         this.jogadores.Add(jogador);

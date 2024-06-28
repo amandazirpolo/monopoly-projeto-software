@@ -1,11 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Prisao : Casa
 {
+    private List<Jogador> presos;
     public override void executaEfeitoCasa(Jogador jogador)
     {
-        throw new System.NotImplementedException();
+        if (jogador.getPreso())
+            adicionarPreso(jogador);
+        else
+            removerPreso(jogador);
+    }
+    private void adicionarPreso(Jogador jogador)
+    {
+        presos.Add(jogador);
+    }
+    private void removerPreso(Jogador jogador)
+    {
+        presos.Remove(jogador);
     }
 }

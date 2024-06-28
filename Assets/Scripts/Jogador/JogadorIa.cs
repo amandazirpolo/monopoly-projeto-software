@@ -4,18 +4,48 @@ using UnityEngine;
 
 public class JogadorIa : Jogador
 {
-    public override void comprarCasa()
+    private EstrategiaCompra estrategiaCompra;
+
+    public override void comprarCasa(Propriedades propriedade)
     {
-        throw new System.NotImplementedException();
+        // 3 cores: vermelho = 1, amarelo = 2, laranja = 3, azulClaro = 4, rosa = 5, verde = 6;
+        // 2 cores: marrom = 7, azulEscuro = 8;
+        Terreno terreno = (Terreno)propriedade;
+        int corMax;
+        if (terreno.getCor() < 7) corMax = 3;
+        else corMax = 2;
+
+        int cont = 0;
+        foreach (Propriedades prop in this.propriedades)
+        {
+            if (prop is Terreno)
+            {
+                terreno = (Terreno)prop;
+                if (terreno.getCor() == ((Terreno)propriedade).getCor())
+                {
+                    cont += 1;
+                }
+            }
+        }
+        if (cont == corMax)
+        {
+            if ((estrategiaCompra is EstrategiaConservadora) && ((getSaldo() - propriedade.getCustoCompra()) / getSaldo() >= 0.35))
+                estrategiaCompra.comprarCasa(propriedade);
+            else if ((estrategiaCompra is EstrategiaAgressiva) && (getSaldo() > propriedade.getCustoCompra()))
+                estrategiaCompra.comprarCasa(propriedade);
+        }
     }
 
     public override void comprarPropriedade(Propriedades propriedade)
     {
-        throw new System.NotImplementedException();
+        if (estrategiaCompra is EstrategiaConservadora)
+            estrategiaCompra.comprarPropriedade(this, propriedade);
+        else if (estrategiaCompra is EstrategiaAgressiva)
+            estrategiaCompra.comprarPropriedade(this, propriedade);
     }
 
-    public override void desistir()
+    public void setEstrategiaCompra(EstrategiaCompra estrategia)
     {
-        throw new System.NotImplementedException();
+        this.estrategiaCompra = estrategia;
     }
 }

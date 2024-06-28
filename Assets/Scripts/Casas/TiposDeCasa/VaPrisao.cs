@@ -6,6 +6,7 @@ public class VaPrisao : Casa
 {
     public override void executaEfeitoCasa(Jogador jogador)
     {
-        throw new System.NotImplementedException();
+        jogador.setPreso(true);
+        jogador.setPosicao(10);
     }
 }

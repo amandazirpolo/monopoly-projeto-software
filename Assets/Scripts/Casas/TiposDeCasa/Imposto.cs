@@ -6,6 +6,6 @@ public class Imposto : Casa
 {
     public override void executaEfeitoCasa(Jogador jogador)
     {
-        throw new System.NotImplementedException();
+        jogador.debita(150);
     }
 }

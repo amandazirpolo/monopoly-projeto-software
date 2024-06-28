@@ -14,12 +14,15 @@ public class Tabuleiro : MonoBehaviour
     {
         iniciarTabuleiro();
     }
+   
     private void iniciarTabuleiro()
     {
         casas = new List<Casa>(40);
         for (int i = 0; i < casas.Count; i++)
         {
             if (i == 0)
+                continue;
+            if (i == 36 || i == 4)
                 casas[i] = new Imposto();
             else if (i==10)
                 casas[i] = new Prisao();
@@ -27,18 +30,20 @@ public class Tabuleiro : MonoBehaviour
                 casas[i] = new VaPrisao();
             else if (i == 5 || i == 15 || i == 25 || i == 35)
                 casas[i] = new Ferrovia();
-            else if (i == 28)
+            else if (i == 28 || i == 12 || i == 38)
                 casas[i] = new CompanhiaServico();
-            else if (i == 7 || i == 22 || i == 36)
+            else if (i == 7 || i == 22 || i== 36)
                 casas[i] = new Sorte();
-            else if (i == 38)
+            else if (i == 2 || i == 17 || i == 33)
                 casas[i] = new Cofre();
             else
                 casas[i] = new Terreno();
         }
         baralhoSorte = new Baralho();
+        baralhoSorte.addCartaSorte();
         embaralhaBaralho(baralhoSorte);
         baralhoCofre = new Baralho();
+        baralhoCofre.addCartaCofre();
         embaralhaBaralho(baralhoCofre);
     }
     private void embaralhaBaralho(Baralho baralho)
@@ -63,10 +68,6 @@ public class Tabuleiro : MonoBehaviour
         jogador.setPosicao(jogador.getPosicao()+passos);
 
     }
-    public void verificaAluguel(int posicao)
-    {
-        return casas[posicao].verificaAluguel();
-    }
     public void prenderJogador(Jogador jogador) 
     {
         jogador.setPreso(true);
@@ -79,5 +80,13 @@ public class Tabuleiro : MonoBehaviour
     public List<GameObject> getCasasTabuleiro()
     {
         return casasTabuleiro;
+    }
+    public Baralho getBaralhoSorte()
+    {
+        return baralhoSorte;
+    }
+    public Baralho getBaralhoCofre()
+    {
+        return baralhoCofre;
     }
 }

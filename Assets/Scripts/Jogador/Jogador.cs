@@ -4,13 +4,14 @@ using UnityEngine;
 
 public abstract class Jogador : MonoBehaviour
 {
-    private string nome;
-    private int saldo;
-    private int posicao;
-    private List<Propriedades> propriedades;
+    protected string nome;
+    protected int saldo;
+    protected int posicao;
+    protected int posicaoAntiga;
+    protected List<Propriedades> propriedades;
 
-    private bool preso;
-    private int turnosPreso;
+    protected bool preso;
+    protected int turnosPreso;
 
     public void receberAluguel(int aluguel) 
     {
@@ -21,25 +22,40 @@ public abstract class Jogador : MonoBehaviour
         this.saldo -= aluguel;
     }
     public abstract void comprarPropriedade(Propriedades propriedade);
-    public void debitaPropriedade(int precoCompra) 
+    public void credita(int valor)
     {
-        this.saldo -= precoCompra;
+        this.saldo += valor;
     }
-    public abstract void comprarCasa();
+    public void debita(int valor) 
+    {
+        this.saldo -= valor;
+    }
+    public abstract void comprarCasa(Propriedades propriedade);
     public bool checarPreso()
     {
         if (this.preso)
             return true;
         return false;
     }
-    public abstract void desistir();
-
     public void setNome(string name)
     {
         this.nome = name;
     }
+    public string getName()
+    {
+        return this.nome;
+    }
+    public void setSaldo(int saldo)
+    {
+        this.saldo = saldo;
+    }
+    public int getSaldo()
+    {
+        return this.saldo;
+    }
     public void setPosicao(int pos)
     {
+        this.posicaoAntiga = this.posicao;
         this.posicao = pos;
         if (this.posicao >= 40)
         {
@@ -49,6 +65,10 @@ public abstract class Jogador : MonoBehaviour
     public int getPosicao()
     {
         return this.posicao;
+    }
+    public int getPosicaoAntiga()
+    {
+        return this.posicaoAntiga;
     }
     public void setPreso(bool status)
     {
@@ -65,5 +85,13 @@ public abstract class Jogador : MonoBehaviour
     public int getTurnosPreso()
     {
         return this.turnosPreso;
+    }
+    public void addPropriedades(Propriedades propriedade)
+    {
+        propriedades.Add(propriedade);
+    }
+    public List<Propriedades> getPropriedades()
+    {
+        return this.propriedades;
     }
 }

@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Sorte : Casa
 {
+    private Tabuleiro tabuleiro;
+    void Start()
+    {
+        tabuleiro = GetComponent<Tabuleiro>();
+    }
     public override void executaEfeitoCasa(Jogador jogador)
     {
-        throw new System.NotImplementedException();
+        CartaSorte carta = tabuleiro.getBaralhoSorte().sortearCarta();
+        carta.aplicarEfeito(jogador);
     }
 }

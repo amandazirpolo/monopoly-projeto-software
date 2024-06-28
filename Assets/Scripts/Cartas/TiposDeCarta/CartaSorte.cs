@@ -1,13 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class CartaSorte : MonoBehaviour
+public abstract class CartaSorte : MonoBehaviour
 {
-    [SerializeField] private string descricao;
+    protected string descricao;
+    protected int valor;
     
-    public virtual void aplicarEfeito()
+    public virtual void aplicarEfeito(Jogador jogador)
     {
-
+        return;
+    }
+    public void mostrarCarta(TextMeshPro texto)
+    {
+        texto.text = descricao;
     }
 }

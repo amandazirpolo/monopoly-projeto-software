@@ -6,6 +6,27 @@ public class Baralho : MonoBehaviour
 {
     private List<CartaSorte> cartas;
 
+    public Baralho()
+    {
+        cartas = new List<CartaSorte>(30);
+    }
+    public void addCartaSorte()
+    {
+        for (int i = 0; i < cartas.Count; i++)
+        {
+            if(i % 2 == 0) 
+                cartas[i] = new CartaTransporte();
+            else
+                cartas[i] = new CartaCofre();
+        }
+    }
+    public void addCartaCofre()
+    {
+        for (int i = 0; i < cartas.Count; i++)
+        {
+            cartas[i] = new CartaCofre();
+        }
+    }
     public void embaralharCartas()
     {
         // Algoritmo Fisher-Yates

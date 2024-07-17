@@ -5,7 +5,7 @@ using UnityEngine;
 public class Jogo : MonoBehaviour
 {
     [SerializeField] private List<GameObject> pecas;
-    [SerializeField][Range(0.1f, 1.0f)] private float moveSpeed; // Velocidade de movimento da peça
+    [SerializeField][Range(0.1f, 1.0f)] private float moveSpeed; // Velocidade de movimento da peï¿½a
 
     [SerializeField] private GameObject botao1;
     [SerializeField] private GameObject botao2;
@@ -99,16 +99,16 @@ public class Jogo : MonoBehaviour
         int currentPos = this.jogadores[turno].getPosicao();
         int piecePos = this.jogadores[turno].getPosicaoAntiga();
 
-        // Verifica se a peça está em uma dezena atrás do jogador
+        // Verifica se a peï¿½a estï¿½ em uma dezena atrï¿½s do jogador
         if ((piecePos / 10) < (currentPos / 10))
         {
-            // Move a peça para a próxima dezena inteira
+            // Move a peï¿½a para a prï¿½xima dezena inteira
             int nextDecadePos = ((piecePos / 10) + 1) * 10;
             Vector3 targetPositionDecade = getTargetPosition(turno, nextDecadePos);
             yield return MoveToPosition(turno, targetPositionDecade);
         }
 
-        // Move a peça para a posição final do jogador
+        // Move a peï¿½a para a posiï¿½ï¿½o final do jogador
         Vector3 targetPosition = getTargetPosition(turno, currentPos);
         yield return MoveToPosition(turno, targetPosition);
     }
